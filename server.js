@@ -24,7 +24,7 @@ app.get('/todos', function (req, res) {
 	res.json(todos);
 })
 
-app.get('/todo/:id', funtion (req, res) {
+app.get('/todo/:id', function (req, res) {
 	var todoId = parseInt(req.params.id, 10);
 	var matchedTodo;
 
