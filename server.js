@@ -9,33 +9,40 @@ var todoNextId = 1;
 
 app.use(bodyParser.json());
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
 	res.send('Todo API Root');
 });
 
-app.get('/todos', function (req, res) {
+app.get('/todos', function(req, res) {
 	var queryParams = req.query; //?completed=true  &q=house
 	var filteredTodos = todos;
 
 	if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
-		filteredTodos = _.Where(todos, {completed: true});	
+		filteredTodos = _.
+		Where(todos, {
+			completed: true
+		});
 	} else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
-		filteredTodos = _.Where(todos, {completed: false});
+		filteredTodos = _.Where(todos, {
+			completed: false
+		});
 	}
 
 	// if (queryParams.hasOwnProperty('q') && _.isString(queryParams.q) && queryParams.q.trim().length > 0) {
 	if (queryParams.hasOwnProperty('q') && queryParams.q.trim().length > 0) {
-		filteredTodos = _.filter(filteredTodos, function (todo) {
+		filteredTodos = _.filter(filteredTodos, function(todo) {
 			return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
-		});		
+		});
 	}
-	
+
 	res.json(filteredTodos);
 })
 
-app.get('/todos/:id', function (req, res) {
+app.get('/todos/:id', function(req, res) {
 	var todoId = parseInt(req.params.id, 10);
-	var matchedTodo = _.findWhere(todos, {id: todoId});
+	var matchedTodo = _.findWhere(todos, {
+		id: todoId
+	});
 
 	// todos.forEach(function (todo) {
 	// 	if (todo.id === todoId) {
@@ -49,7 +56,7 @@ app.get('/todos/:id', function (req, res) {
 	}
 });
 
-app.post('/todos', function (req, res) {
+app.post('/todos', function(req, res) {
 	// var body = req.body;
 
 	// body = _.pick(body, 'description', 'status', "id");
@@ -70,21 +77,27 @@ app.post('/todos', function (req, res) {
 
 });
 
-app.delete('/todos:id', function (req, res) {
+app.delete('/todos:id', function(req, res) {
 	var todoId = parseInt(req.params.id);
-	var matchedTodo = _.findWhere(todos, {'id': todoId});	
+	var matchedTodo = _.findWhere(todos, {
+		'id': todoId
+	});
 
 	if (!matchedTodo) {
-		res.status(404).json({"error":"no todo found with that id"});
+		res.status(404).json({
+			"error": "no todo found with that id"
+		});
 	} else {
 		todos = _.without(todos, matchedTodo);
-		res.json(matchedTodo);	
-	}	
+		res.json(matchedTodo);
+	}
 });
 
-app.put('/todos:id', function (req, res) {
+app.put('/todos:id', function(req, res) {
 	var todoId = parseInt(req.parms.id);
-	var matchedTodo = _.findWhere(todos, {'id': todoId});
+	var matchedTodo = _.findWhere(todos, {
+		'id': todoId
+	});
 	var body = _.pick(req.body, 'description', 'completed');
 	var validAttributes = {};
 
@@ -109,11 +122,11 @@ app.put('/todos:id', function (req, res) {
 	} else {
 		// Never provided attribute, no problem here	
 	}
-	
+
 	_.extend(matchedTodo, validAttributes);
 	res.json(matchedTodo);
 });
 
-app.listen(PORT, function () {
+app.listen(PORT, function() {
 	console.log('Express listening on port ' + PORT);
 });
