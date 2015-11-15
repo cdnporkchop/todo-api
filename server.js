@@ -14,13 +14,20 @@ app.get('/', function (req, res) {
 });
 
 app.get('/todos', function (req, res) {
-	var queryParams = req.query; //?completed=true
+	var queryParams = req.query; //?completed=true  &q=house
 	var filteredTodos = todos;
 
 	if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
 		filteredTodos = _.Where(todos, {completed: true});	
 	} else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
 		filteredTodos = _.Where(todos, {completed: false});
+	}
+
+	// if (queryParams.hasOwnProperty('q') && _.isString(queryParams.q) && queryParams.q.trim().length > 0) {
+	if (queryParams.hasOwnProperty('q') && queryParams.q.trim().length > 0) {
+		filteredTodos = _.filter(filteredTodos, function (todo) {
+			return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+		});		
 	}
 	
 	res.json(filteredTodos);
